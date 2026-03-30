@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Marketing Audit | The Quill Company</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:    #0a0a0a;
+    --paper:  #f7f5f0;
+    --white:  #ffffff;
+    --mid:    #888880;
+    --light:  #d8d6d0;
+    --serif:  'Playfair Display', Georgia, serif;
+    --body:   'Lora', Georgia, serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--body);
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Progress bar ──────────────────────────── */
+  #progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: var(--ink);
+    width: 0%;
+    transition: width 0.4s ease;
+    z-index: 100;
+  }
+
+  /* ── Hero ──────────────────────────────────── */
+  .hero {
+    background: var(--ink);
+    color: var(--white);
+    padding: 80px 5% 72px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px;
+    opacity: 1;
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .logo-wrap {
+    margin-bottom: 48px;
+  }
+
+  .logo-wrap img {
+    height: 56px;
+    filter: invert(1);
+    opacity: 0.9;
+  }
+
+  .hero-label {
+    font-family: var(--body);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(36px, 6vw, 58px);
+    font-weight: 400;
+    line-height: 1.12;
+    margin-bottom: 28px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  .hero-rule {
+    width: 48px;
+    height: 1px;
+    background: var(--mid);
+    margin-bottom: 28px;
+  }
+
+  .hero-intro {
+    font-size: 17px;
+    line-height: 1.75;
+    color: #aaa;
+    max-width: 540px;
+  }
+
+  /* ── Progress counter ──────────────────────── */
+  .progress-strip {
+    background: #141414;
+    border-top: 1px solid #1e1e1e;
+    padding: 18px 5%;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .progress-strip-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 2px;
+    background: #2a2a2a;
+    border-radius: 1px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--white);
+    width: 0%;
+    transition: width 0.4s ease;
+    border-radius: 1px;
+  }
+
+  .progress-label {
+    font-family: var(--body);
+    font-size: 12px;
+    color: #666;
+    white-space: nowrap;
+    letter-spacing: 0.06em;
+  }
+
+  #progress-count {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  /* ── Sections ──────────────────────────────── */
+  .audit-section {
+    padding: 72px 5% 64px;
+    border-bottom: 1px solid var(--light);
+    position: relative;
+  }
+
+  .audit-section:nth-child(even) {
+    background: var(--white);
+  }
+
+  .section-inner {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .section-num {
+    font-family: var(--serif);
+    font-size: 120px;
+    font-weight: 400;
+    color: var(--ink);
+    opacity: 0.05;
+    position: absolute;
+    top: 24px;
+    right: 5%;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .section-tag {
+    font-family: var(--body);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 14px;
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  .section-intro {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 36px;
+    font-style: italic;
+  }
+
+  /* ── Checklist items ───────────────────────── */
+  .checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 36px;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    user-select: none;
+  }
+
+  .check-item:hover {
+    background: rgba(10,10,10,0.03);
+    border-color: var(--light);
+  }
+
+  .check-item.checked {
+    background: rgba(10,10,10,0.04);
+    border-color: var(--light);
+  }
+
+  .check-box {
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--light);
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    position: relative;
+    transition: background 0.2s, border-color 0.25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .check-item.checked .check-box {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .check-box svg {
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.2s, transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .check-item.checked .check-box svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .check-text {
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink);
+    transition: color 0.2s;
+  }
+
+  .check-item.checked .check-text {
+    color: var(--mid);
+    text-decoration: line-through;
+    text-decoration-color: var(--light);
+  }
+
+  .section-closer {
+    font-family: var(--serif);
+    font-size: 15px;
+    font-style: italic;
+    color: var(--mid);
+    padding-top: 8px;
+  }
+
+  /* ── What Now section ──────────────────────── */
+  .what-now {
+    padding: 72px 5% 64px;
+    background: var(--paper);
+  }
+
+  .what-now-inner {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .what-now h2 {
+    font-family: var(--serif);
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 400;
+    margin-bottom: 20px;
+  }
+
+  .what-now p {
+    font-size: 17px;
+    line-height: 1.75;
+    color: #555;
+    max-width: 560px;
+    margin-bottom: 16px;
+  }
+
+  /* ── CTA section ───────────────────────────── */
+  .cta-section {
+    background: var(--ink);
+    color: var(--white);
+    padding: 80px 5%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px;
+    pointer-events: none;
+  }
+
+  .cta-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .cta-label {
+    font-family: var(--body);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 20px;
+  }
+
+  .cta-section h2 {
+    font-family: var(--serif);
+    font-size: clamp(30px, 5vw, 48px);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+
+  .cta-section h2 em {
+    font-style: italic;
+  }
+
+  .cta-rule {
+    width: 48px;
+    height: 1px;
+    background: #333;
+    margin-bottom: 24px;
+  }
+
+  .cta-sub {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #999;
+    max-width: 480px;
+    margin-bottom: 40px;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background: var(--white);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 18px 40px;
+    border-radius: 2px;
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+  }
+
+  .cta-btn:hover {
+    background: var(--paper);
+    transform: translateY(-1px);
+  }
+
+  /* ── Footer ────────────────────────────────── */
+  .page-footer {
+    background: #050505;
+    padding: 28px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .page-footer p {
+    font-size: 12px;
+    color: #444;
+    letter-spacing: 0.04em;
+  }
+
+  .page-footer a {
+    color: #666;
+    text-decoration: none;
+    font-size: 12px;
+  }
+
+  .page-footer a:hover { color: #999; }
+
+  /* ── Responsive ────────────────────────────── */
+  @media (max-width: 600px) {
+    .hero { padding: 56px 6% 52px; }
+    .audit-section { padding: 52px 6% 48px; }
+    .section-num { font-size: 80px; }
+    .cta-section { padding: 60px 6%; }
+    .check-item { padding: 14px 12px; gap: 14px; }
+    .check-text { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="logo-wrap">
+      <img src="https://static.wixstatic.com/media/b9b73c_f560f2e5f5e84a4289d0c1f88e2ad590~mv2.png" alt="The Quill Company">
+    </div>
+    <p class="hero-label">Free Resource &nbsp;·&nbsp; The Quill Company</p>
+    <h1>Mini<br><em>Marketing Audit</em></h1>
+    <div class="hero-rule"></div>
+    <p class="hero-intro">Most business owners don't realize their website is quietly leaking leads. Sometimes it's the copy. Sometimes it's the structure. Sometimes it's just hard to use.<br><br>This quick checklist gives you a fast, honest look at what might be slowing your growth — and what to fix first.</p>
+  </div>
+</section>
+
+<!-- Sticky progress -->
+<div class="progress-strip">
+  <div class="progress-strip-inner">
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <p class="progress-label"><span id="progress-count">0</span> / 16 completed</p>
+  </div>
+</div>
+
+<!-- Section 1 -->
+<section class="audit-section">
+  <div class="section-inner">
+    <span class="section-num">1</span>
+    <p class="section-tag">Section 01</p>
+    <h2 class="section-title">Messaging: Are You Saying the Right Thing?</h2>
+    <p class="section-intro">The average visitor decides in seconds whether they care.</p>
+    <div class="checklist">
+      <div class="check-item" onclick="toggle(this)">
+        <span class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="check-text">Can a stranger tell what you do within 5 seconds?</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)">
+        <span class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="check-text">Are you talking about their problems — or just listing your services?</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)">
+        <span class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="check-text">Does the tone sound like a real person or corporate jargon?</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)">
+        <span class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="check-text">Is it obvious why someone should trust or choose you?</span>
+      </div>
+    </div>
+    <p class="section-closer">If this part's unclear, no fancy design will save it.</p>
+  </div>
+</section>
+
+<!-- Section 2 -->
+<section class="audit-section">
+  <div class="section-inner">
+    <span class="section-num">2</span>
+    <p class="section-tag">Section 02</p>
+    <h2 class="section-title">CTAs: Are You Guiding People or Leaving Them Hanging?</h2>
+    <p class="section-intro">If your site doesn't make it obvious what to do next, people leave.</p>
+    <div class="checklist">
+      <div class="check-item" onclick="toggle(this)">
+        <span class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="check-text">Do you have one clear next step (book, call, quote, etc.)?</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)">
+        <span class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="check-text">Is that CTA easy to find and consistent across pages?</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)">
+        <span class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="check-text">Do your buttons say things like "Get Started" instead of "Submit"?</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)">
+        <span class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="check-text">Does every page have a clear point, or is it just a wall of info?</span>
+      </div>
+    </div>
+    <p class="section-closer">Less friction = more action.</p>
+  </div>
+</section>
+
+<!-- Section 3 -->
+<section class="audit-section">
+  <div class="section-inner">
+    <span class="section-num">3</span>
+    <p class="section-tag">Section 03</p>
+    <h2 class="section-title">Proof: Why Should They Believe You?</h2>
+    <p class="section-intro">Even if you say all the right things, people need to see it to believe it.</p>
+    <div class="checklist">
+      <div class="check-item" onclick="toggle(this)">
+        <span class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="check-text">Do you have real testimonials that speak to results or outcomes?</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)">
+        <span class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="check-text">Are you showing any proof — before/afters, stats, recognitions, logos?</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)">
+        <span class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="check-text">Does your design feel modern, confident, and trustworthy?</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)">
+        <span class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="check-text">Is there a human face anywhere — you, your team, your clients?</span>
+      </div>
+    </div>
+    <p class="section-closer">Social proof isn't just for big brands — it's your best shortcut to trust.</p>
+  </div>
+</section>
+
+<!-- Section 4 -->
+<section class="audit-section">
+  <div class="section-inner">
+    <span class="section-num">4</span>
+    <p class="section-tag">Section 04</p>
+    <h2 class="section-title">Mobile & Usability: Is It Easy to Use?</h2>
+    <p class="section-intro">A ton of people will only see your site on their phone. That experience matters.</p>
+    <div class="checklist">
+      <div class="check-item" onclick="toggle(this)">
+        <span class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="check-text">Does your site load quickly (under 3 seconds is the goal)?</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)">
+        <span class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="check-text">Can you scroll easily and read everything on mobile?</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)">
+        <span class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="check-text">Are buttons big enough to tap with your thumb?</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)">
+        <span class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="check-text">Is your contact form short and simple?</span>
+      </div>
+    </div>
+    <p class="section-closer">If it feels clunky, people bounce.</p>
+  </div>
+</section>
+
+<!-- What Now -->
+<section class="what-now">
+  <div class="what-now-inner">
+    <h2>What Now?</h2>
+    <p>If you nailed most of this — awesome. If a few things stood out as weak spots, that's good too. It means there's opportunity.</p>
+    <p>Want another set of eyes on it?</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <p class="cta-label">Next Step</p>
+    <h2>I'll walk through your site<br><em>with you.</em></h2>
+    <div class="cta-rule"></div>
+    <p class="cta-sub">Show you what's missing, and give you clear next steps to improve it. Free, no strings attached.</p>
+    <a href="https://calendly.com/griff-thequillcompany/30min" class="cta-btn" target="_blank">Book a Free Call</a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="page-footer">
+  <p>© 2025 The Quill Company</p>
+  <a href="https://www.thequillcompany.com">thequillcompany.com</a>
+</footer>
+
+<script>
+  const TOTAL = 16;
+
+  function toggle(el) {
+    el.classList.toggle('checked');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const checked = document.querySelectorAll('.check-item.checked').length;
+    const pct = (checked / TOTAL) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('progress-count').textContent = checked;
+  }
+</script>
+
+</body>
+</html>
